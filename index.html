@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>WeEurope.ai · 欧洲生活 & 商业 & AI 助手</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #020617;
+      --card: #0b1120;
+      --border: #1f2937;
+      --accent: #4f46e5;
+      --accent-soft: rgba(79, 70, 229, 0.12);
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #111827 0, #020617 55%, #000 100%);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .page {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 1.5rem 1.2rem 3rem;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(12px);
+      background: linear-gradient(to bottom, rgba(2, 6, 23, 0.95), rgba(2, 6, 23, 0.2), transparent);
+      border-bottom: 1px solid rgba(31, 41, 55, 0.7);
+    }
+
+    .nav {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0.6rem 1.2rem 0.7rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .logo-mark {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      background: conic-gradient(from 150deg, #22c55e, #4f46e5, #0ea5e9, #22c55e);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #020617;
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.6);
+    }
+
+    .logo-text-main { font-weight: 700; font-size: 1.1rem; letter-spacing: 0.04em; }
+    .logo-text-sub  { font-size: 0.78rem; color: var(--muted); }
+
+    .nav-links {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.88rem;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      position: relative;
+      padding-bottom: 0.15rem;
+    }
+
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -0.25rem;
+      width: 0;
+      height: 2px;
+      border-radius: 999px;
+      background: linear-gradient(to right, #4f46e5, #22c55e);
+      transition: width 0.18s ease-out;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    main { margin-top: 1.5rem; display: flex; flex-direction: column; gap: 2rem; }
+
+    .hero {
+      background: radial-gradient(circle at top left, #111827, #020617);
+      border-radius: 1.25rem;
+      border: 1px solid var(--border);
+      padding: 1.5rem;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.9);
+    }
+
+    .hero-kicker {
+      font-size: 0.75rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #a5b4fc;
+      margin-bottom: 0.6rem;
+    }
+
+    .hero-title {
+      font-size: clamp(1.8rem, 3vw, 2.4rem);
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      margin-bottom: 0.6rem;
+    }
+
+    .hero-title span {
+      background: linear-gradient(to right, #e5e7eb, #a5b4fc, #6ee7b7);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-text {
+      font-size: 0.95rem;
+      color: var(--muted);
+      max-width: 40rem;
+    }
+
+    .hero-text strong { color: #e5e7eb; }
+
+    .hero-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.8rem;
+    }
+
+    .tag {
+      font-size: 0.78rem;
+      padding: 0.15rem 0.65rem;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid var(--border);
+      color: #cbd5f5;
+    }
+
+    .section {
+      background: var(--card);
+      border-radius: 1rem;
+      border: 1px solid var(--border);
+      padding: 1.3rem;
+      box-shadow: 0 12px 32px rgba(15, 23, 42, 0.8);
+    }
+
+    .section h2 {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .section p.section-sub {
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-bottom: 0.8rem;
+    }
+
+    /* AI chat 区 */
+
+    .chat-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      gap: 1rem;
+    }
+
+    .chat-box {
+      border-radius: 0.9rem;
+      border: 1px solid var(--border);
+      background: #020617;
+      padding: 0.8rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      max-height: 420px;
+    }
+
+    #chat-log {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0.4rem;
+      font-size: 0.88rem;
+    }
+
+    .msg {
+      margin-bottom: 0.4rem;
+      padding: 0.35rem 0.5rem;
+      border-radius: 0.6rem;
+      font-size: 0.86rem;
+    }
+
+    .msg.user {
+      background: rgba(79, 70, 229, 0.16);
+      text-align: right;
+    }
+
+    .msg.ai {
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(55, 65, 81, 0.8);
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 80px;
+      border-radius: 0.6rem;
+      border: 1px solid var(--border);
+      background: #020617;
+      color: var(--text);
+      font-size: 0.9rem;
+      padding: 0.5rem;
+      resize: vertical;
+      outline: none;
+    }
+
+    textarea:focus {
+      border-color: #a5b4fc;
+      box-shadow: 0 0 0 1px rgba(129, 140, 248, 0.7);
+    }
+
+    .chat-actions {
+      margin-top: 0.4rem;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    button {
+      border-radius: 999px;
+      border: 1px solid transparent;
+      padding: 0.4rem 1.1rem;
+      font-size: 0.86rem;
+      cursor: pointer;
+      background: linear-gradient(to right, #4f46e5, #22c55e);
+      color: #f9fafb;
+      font-weight: 500;
+      box-shadow: 0 10px 28px rgba(15, 23, 42, 0.85);
+      transition: transform 0.12s ease-out, box-shadow 0.12s ease-out;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: default;
+      box-shadow: none;
+      transform: none;
+    }
+
+    button:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 34px rgba(15, 23, 42, 0.95);
+    }
+
+    .hint {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 0.3rem;
+    }
+
+    .examples {
+      font-size: 0.82rem;
+      color: var(--muted);
+      border-radius: 0.7rem;
+      border: 1px dashed var(--border);
+      padding: 0.6rem 0.7rem;
+      background: rgba(15, 23, 42, 0.8);
+    }
+
+    .examples ul {
+      margin-left: 1.1rem;
+      margin-top: 0.2rem;
+    }
+
+    /* Blog 简单区块 */
+
+    .blog-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      font-size: 0.9rem;
+    }
+
+    .blog-item {
+      padding: 0.55rem 0.65rem;
+      border-radius: 0.7rem;
+      border: 1px solid var(--border);
+      background: #020617;
+    }
+
+    .blog-item-title {
+      font-weight: 600;
+      margin-bottom: 0.15rem;
+    }
+
+    .blog-item-meta {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    footer {
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(31, 41, 55, 0.8);
+      font-size: 0.8rem;
+      color: var(--muted);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 0.4rem;
+    }
+
+    @media (max-width: 720px) {
+      .nav-links { display: none; }
+      .chat-layout { grid-template-columns: minmax(0, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav">
+      <div class="logo-wrap">
+        <div class="logo-mark">WE</div>
+        <div>
+          <div class="logo-text-main">WeEurope.ai</div>
+          <div class="logo-text-sub">AI for life & business in Europe</div>
+        </div>
+      </div>
+      <nav class="nav-links">
+        <a href="#assistant">AI 助手</a>
+        <a href="#blog">Blog</a>
+        <a href="#contact">联系</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="page">
+    <main>
+      <!-- Hero -->
+      <section class="hero">
+        <div class="hero-kicker">WeEurope.ai · 为在欧洲 & 想来欧洲的华人服务</div>
+        <h1 class="hero-title">
+          用 <span>AI</span> 帮你看懂欧洲，<br />
+          做出更聪明的 <span>决策</span>。
+        </h1>
+        <p class="hero-text">
+          WeEurope.ai 面向中文用户，整合 <strong>欧洲多国签证、生活、教育和商业信息</strong>，
+          用 AI 帮你快速理解官方文字、比较不同国家路径，并生成 <strong>可以直接执行的下一步建议</strong>。
+        </p>
+        <div class="hero-tags">
+          <span class="tag">签证 & 居留 Explain visa & residence</span>
+          <span class="tag">教育 & 家庭规划 Education & family</span>
+          <span class="tag">创业 & 投资 Business & investment</span>
+          <span class="tag">中英双语 Bilingual outputs</span>
+        </div>
+      </section>
+
+      <!-- AI assistant -->
+      <section class="section" id="assistant">
+        <h2>AI 助手 · Europe Assistant</h2>
+        <p class="section-sub">
+          在这里，你可以用中文问关于欧洲生活、签证、教育和商业的问题。
+          网站会把你的问题转发给 OpenAI 的大模型，并返回答案（注意：目前只是原型，不构成法律 / 税务 / 移民正式意见）。
+        </p>
+
+        <div class="chat-layout">
+          <div class="chat-box">
+            <div id="chat-log">
+              <div class="msg ai">
+                👋 你好，我是 WeEurope AI 小助手。可以用中文问我：<br />
+                · 比较芬兰和德国的企业家居留路径<br />
+                · 孩子在芬兰上小学怎么选学校<br />
+                · 在某个城市开超市 / 餐厅大概要注意什么
+              </div>
+            </div>
+            <textarea id="user-input" placeholder="用中文问我，比如：我打算去芬兰开超市，企业家居留大概要什么条件？"></textarea>
+            <div class="chat-actions">
+              <button id="send-btn">发送 / Ask</button>
+            </div>
+            <div class="hint">
+              小提示：目前每次对话是一次性问答，不会记住历史记录；正式版可以做成“连续聊天 + 保存会话”。
+            </div>
+          </div>
+
+          <div class="examples">
+            <strong>示例问题 / Example prompts：</strong>
+            <ul>
+              <li>“我是中国公民，打算带孩子去芬兰生活，请帮我比较芬兰和德国的企业家居留难度。”</li>
+              <li>“帮我写一封英文邮件，告诉老师孩子这周因为生病请假。”</li>
+              <li>“在柏林开一家小吃店，大概需要多少钱的预算？有哪些成本项？”</li>
+            </ul>
+            <p style="margin-top:0.4rem;">
+              ⚠️ 请不要在这里输入你的护照号、身份证号、银行账号等敏感信息。
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Blog 简单区块 -->
+      <section class="section" id="blog">
+        <h2>WeEurope Blog（示例）</h2>
+        <p class="section-sub">
+          这里将来可以放你关于欧洲生活、教育、商业的长文内容。现在先放几个示例条目，
+          真正上线时可以改成静态文章，或者以后升级成带后台的 Blog 系统。
+        </p>
+        <div class="blog-list">
+          <article class="blog-item">
+            <div class="blog-item-title">芬兰 vs 德国：企业家居留路径对比（2025 版）</div>
+            <div class="blog-item-meta">类型：居留规划 · 语言：中文 / English</div>
+          </article>
+          <article class="blog-item">
+            <div class="blog-item-title">带孩子来北欧：从幼儿园到高中的教育路线图</div>
+            <div class="blog-item-meta">类型：教育 / 家庭 · 语言：中文</div>
+          </article>
+          <article class="blog-item">
+            <div class="blog-item-title">20 万欧在赫尔辛基 & 柏林开店，各能做什么？</div>
+            <div class="blog-item-meta">类型：商业 / 投资 · 语言：中文</div>
+          </article>
+        </div>
+      </section>
+
+      <!-- 联系区 -->
+      <section class="section" id="contact">
+        <h2>联系 WeEurope.ai</h2>
+        <p class="section-sub">
+          当前站点仍在内测阶段。如果你是准备来欧洲的家庭、创业者，或者在欧洲做移民 / 教育 / 法律 / 会计服务的机构，
+          欢迎通过邮箱联系，探索合作方式。
+        </p>
+        <p style="font-size:0.9rem;">
+          📩 Email（示例，可改成你的真实邮箱）：<br />
+          <strong>hello@weeurope.ai</strong>
+        </p>
+      </section>
+    </main>
+
+    <footer>
+      <span>© <span id="year"></span> WeEurope.ai · All rights reserved.</span>
+      <span>Made with OpenAI & Vercel</span>
+    </footer>
+  </div>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    const sendBtn = document.getElementById("send-btn");
+    const inputEl = document.getElementById("user-input");
+    const chatLog = document.getElementById("chat-log");
+
+    function appendMessage(role, text) {
+      const div = document.createElement("div");
+      div.className = "msg " + role;
+      div.textContent = text;
+      chatLog.appendChild(div);
+      chatLog.scrollTop = chatLog.scrollHeight;
+    }
+
+    async function sendMessage() {
+      const text = inputEl.value.trim();
+      if (!text) return;
+
+      appendMessage("user", text);
+      inputEl.value = "";
+      sendBtn.disabled = true;
+      sendBtn.textContent = "思考中…";
+
+      try {
+        const res = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: text })
+        });
+
+        if (!res.ok) {
+          const errText = await res.text();
+          appendMessage("ai", "抱歉，服务器返回错误：" + errText);
+        } else {
+          const data = await res.json();
+          appendMessage("ai", data.reply || "（没有收到内容）");
+        }
+      } catch (err) {
+        appendMessage("ai", "请求失败，请稍后再试：" + err.message);
+      } finally {
+        sendBtn.disabled = false;
+        sendBtn.textContent = "发送 / Ask";
+      }
+    }
+
+    sendBtn.addEventListener("click", sendMessage);
+    inputEl.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+  </script>
+</body>
+</html>
